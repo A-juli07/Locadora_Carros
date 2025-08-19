@@ -1,0 +1,1195 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Locadora de Carros",
+        "description": "Documentação da API da Locadora de Carros com autenticação JWT",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Servidor API"
+        }
+    ],
+    "paths": {
+        "/api/cadastro": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Cadastro de usuário",
+                "operationId": "6f242f8dc4dccd2bb18a96207f74450c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "João da Silva"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "joao@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado com sucesso"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login do usuário",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "joao@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login bem-sucedido"
+                    },
+                    "401": {
+                        "description": "Usuário ou senha inválidos"
+                    }
+                }
+            }
+        },
+        "/api/v1/me": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Usuário autenticado",
+                "operationId": "c00eae42a17ad023b41887f78512fb32",
+                "responses": {
+                    "200": {
+                        "description": "Retorna os dados do usuário logado"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout do usuário",
+                "operationId": "c4eddaf1a2e990cc90e4326c0d731d41",
+                "responses": {
+                    "200": {
+                        "description": "Logout realizado com sucesso"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/carro": {
+            "get": {
+                "tags": [
+                    "Carro"
+                ],
+                "summary": "Carros cadastrados",
+                "operationId": "cbc22ee8bcac2f6bd9048cc6086462fc",
+                "parameters": [
+                    {
+                        "name": "atributos_modelo",
+                        "in": "query",
+                        "description": "Quais colunas do relacionamento 'modelo' retornar. Use vírgula para separar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "nome,numero_portas"
+                    },
+                    {
+                        "name": "filtro",
+                        "in": "query",
+                        "description": "Filtros dinâmicos. Exemplos de operadores comuns: =, >, >=, <, <=, like, in, between. ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "km:>:1000"
+                    },
+                    {
+                        "name": "atributos",
+                        "in": "query",
+                        "description": "Quais colunas do recurso 'carro' retornar. Use vírgula para separar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "modelo_id,placa,km,disponivel"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna os dados do carro"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Carro"
+                ],
+                "summary": "Cadastro de carros",
+                "operationId": "38deb3eb4719a4e3772fc7db422c0511",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "modelo_id",
+                                    "placa",
+                                    "disponivel",
+                                    "km"
+                                ],
+                                "properties": {
+                                    "modelo_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "placa": {
+                                        "type": "integer",
+                                        "example": "JG23P4"
+                                    },
+                                    "disponivel": {
+                                        "type": "boolean",
+                                        "example": "1"
+                                    },
+                                    "km": {
+                                        "type": "integer",
+                                        "example": "1000"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Carro criado com sucesso"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/carro/{id}": {
+            "get": {
+                "tags": [
+                    "Carro"
+                ],
+                "summary": "Detalhes de um carro",
+                "operationId": "a6b30ad264ba88f163d969816409910c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do carro a ser pesquisado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 2
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Carro não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Carro"
+                ],
+                "summary": "Atualização completa de um carro",
+                "description": "Substitui todos os campos do recurso carro (estilo PUT).",
+                "operationId": "93fb541bf22c12ddde04bf1a8f20b821",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do carro a ser atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payload completo para atualização (PUT requer todos os campos obrigatórios do model).",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "modelo_id",
+                                    "placa",
+                                    "km",
+                                    "disponivel"
+                                ],
+                                "properties": {
+                                    "modelo_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "placa": {
+                                        "type": "string",
+                                        "example": "ABC1D23"
+                                    },
+                                    "km": {
+                                        "type": "integer",
+                                        "example": 15000
+                                    },
+                                    "disponivel": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Carro atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Recurso não existe"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Carro"
+                ],
+                "summary": "Remover um carro",
+                "operationId": "e6b3a68dd4b02091e56d3939072bf3b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do carro a ser deletado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 2
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Carro não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Carro"
+                ],
+                "summary": "Atualização parcial de um carro",
+                "description": "Atualiza apenas os campos enviados (estilo PATCH).",
+                "operationId": "98daee66c5fac3cecdefeaf2431703bc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do carro a ser atualizado parcialmente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "description": "Qualquer subconjunto de campos do carro.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "modelo_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "placa": {
+                                        "type": "string",
+                                        "example": "XYZ9Z99"
+                                    },
+                                    "km": {
+                                        "type": "integer",
+                                        "example": 22000
+                                    },
+                                    "disponivel": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "example": {
+                                "km": 22000,
+                                "disponivel": false
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Carro atualizado parcialmente com sucesso"
+                    },
+                    "404": {
+                        "description": "Recurso não existe"
+                    },
+                    "422": {
+                        "description": "Erro de validação (apenas para campos enviados)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/cliente": {
+            "get": {
+                "tags": [
+                    "Cliente"
+                ],
+                "summary": "Clientes cadastrados",
+                "operationId": "b673ae9e076460a2f7c8083b65034f17",
+                "parameters": [
+                    {
+                        "name": "filtro",
+                        "in": "query",
+                        "description": "Filtros dinâmicos. Exemplos de operadores comuns: =, >, >=, <, <=, like, in, between. Use % caso queira pesquisa só o inicio do nome",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "nome:like:J%"
+                    },
+                    {
+                        "name": "atributos",
+                        "in": "query",
+                        "description": "Quais colunas do recurso 'cliente' retornar. Use vírgula para separar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "nome,id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna os dados do cliente"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Cliente"
+                ],
+                "summary": "Cadastro de clientes",
+                "operationId": "58057ca83a1c7140fc79a65e8aa13a3b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "João Teste"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cliente criado com sucesso"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/cliente/{id}": {
+            "get": {
+                "tags": [
+                    "Cliente"
+                ],
+                "summary": "Detalhes de um cliente",
+                "operationId": "a057068d9391a025507495b52447d0b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente a ser pesquisado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 2
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Cliente"
+                ],
+                "summary": "Atualização completa de um cliente",
+                "description": "Substitui todos os campos do recurso cliente (estilo PUT).",
+                "operationId": "162cc3cad204fb75bb882c7dc884c9b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente a ser atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payload completo para atualização (PUT requer todos os campos obrigatórios do model).",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Recurso não existe"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Cliente"
+                ],
+                "summary": "Remover um cliente",
+                "operationId": "624fdaf82f3eeeb6cae96440d57638c4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente a ser deletado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 2
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/locacao": {
+            "get": {
+                "tags": [
+                    "Locacao"
+                ],
+                "summary": "Locacao cadastradas",
+                "operationId": "92b8080c5793f4f3f6e7c6bbee29bc4b",
+                "parameters": [
+                    {
+                        "name": "atributos_clientes",
+                        "in": "query",
+                        "description": "Quais colunas do relacionamento 'cliente' retornar. Use vírgula para separar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "nome"
+                    },
+                    {
+                        "name": "atributos_carros",
+                        "in": "query",
+                        "description": "Quais colunas do relacionamento 'carro' retornar. Use vírgula para separar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "placa,disponivel,km"
+                    },
+                    {
+                        "name": "filtro",
+                        "in": "query",
+                        "description": "Filtros dinâmicos. Exemplos de operadores comuns: =, >, >=, <, <=, like, in, between. ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "km_final:>:1000"
+                    },
+                    {
+                        "name": "atributos",
+                        "in": "query",
+                        "description": "Quais colunas do recurso 'locacao' retornar. Use vírgula para separar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "cliente_id,carro_id,data_inicio_periodo,data_final_previsto_periodo,km_final"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna os dados da locação"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Locacao"
+                ],
+                "summary": "Cadastro de locações",
+                "operationId": "2e36625b60e2ac69bb6653ca6c137e12",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "cliente_id",
+                                    "carro_id",
+                                    "data_inicio_periodo",
+                                    "data_final_previsto_periodo",
+                                    "data_final_realizado_periodo",
+                                    "valor_diaria"
+                                ],
+                                "properties": {
+                                    "cliente_id": {
+                                        "type": "integer",
+                                        "example": "2"
+                                    },
+                                    "carro_id": {
+                                        "type": "integer",
+                                        "example": "3"
+                                    },
+                                    "data_inicio_periodo": {
+                                        "type": "date_format:d-m-y",
+                                        "example": "18-08-25"
+                                    },
+                                    "data_final_previsto_periodo": {
+                                        "type": "date_format:d-m-y",
+                                        "example": "20-08-25"
+                                    },
+                                    "data_final_realizado_periodo": {
+                                        "type": "date_format:d-m-y",
+                                        "example": "20-08-25"
+                                    },
+                                    "valor_diaria": {
+                                        "type": "integer",
+                                        "example": "150"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Locação criada com sucesso"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/locacao/{id}": {
+            "get": {
+                "tags": [
+                    "Locacao"
+                ],
+                "summary": "Detalhes de uma locacao",
+                "operationId": "b604e242a8c756b6200372eb0ff360f8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da locacao a ser pesquisado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 2
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Locacao não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Locacao"
+                ],
+                "summary": "Atualização completa de uma locacao",
+                "description": "Substitui todos os campos do recurso locacao (estilo PUT).",
+                "operationId": "08213c4c51f3867e134052b8759948b7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da locacao a ser atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "description": "Payload completo para atualização (PUT requer todos os campos obrigatórios do model).",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "cliente_id",
+                                    "carro_id",
+                                    "data_inicio_periodo",
+                                    "data_final_previsto_periodo",
+                                    "valor_diaria"
+                                ],
+                                "properties": {
+                                    "cliente_id": {
+                                        "type": "integer",
+                                        "example": "2"
+                                    },
+                                    "carro_id": {
+                                        "type": "integer",
+                                        "example": "3"
+                                    },
+                                    "data_inicio_periodo": {
+                                        "type": "date_format:d-m-y",
+                                        "example": "18-08-25"
+                                    },
+                                    "data_final_previsto_periodo": {
+                                        "type": "date_format:d-m-y",
+                                        "example": "20-08-25"
+                                    },
+                                    "valor_diaria": {
+                                        "type": "integer",
+                                        "example": "150"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Carro atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Recurso não existe"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Locacao"
+                ],
+                "summary": "Remover uma locacao",
+                "operationId": "c322668d896d6c467943b879e3963bd4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da locacao a ser deletado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 2
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Locacao não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Locacao"
+                ],
+                "summary": "Finaliza uma locacao",
+                "description": "Atualiza apenas os campos enviados (estilo PATCH).",
+                "operationId": "422ae94da5bfa9c1fc2a97fc0d4440bd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da locacao a ser atualizado parcialmente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "description": "Qualquer subconjunto de campos de locacao.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "km_final": {
+                                        "type": "integer",
+                                        "example": 1798
+                                    },
+                                    "data_final_realizado_periodo": {
+                                        "type": "date_format:d-m-y",
+                                        "example": "20-08-25"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Locacao atualizado parcialmente com sucesso"
+                    },
+                    "404": {
+                        "description": "Recurso não existe"
+                    },
+                    "422": {
+                        "description": "Erro de validação (apenas para campos enviados)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/marca": {
+            "get": {
+                "tags": [
+                    "Marca"
+                ],
+                "summary": "Marca cadastradas",
+                "operationId": "856be07665a618c27155ff131dd4c1df",
+                "parameters": [
+                    {
+                        "name": "atributos_modelos",
+                        "in": "query",
+                        "description": "Quais colunas do relacionamento 'modelo' retornar. Use vírgula para separar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "nome,imagem,marca_id"
+                    },
+                    {
+                        "name": "filtro",
+                        "in": "query",
+                        "description": "Filtros dinâmicos. Exemplos de operadores comuns: =, >, >=, <, <=, like, in, between. ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "nome:like:Fiat"
+                    },
+                    {
+                        "name": "atributos",
+                        "in": "query",
+                        "description": "Quais colunas do recurso 'locacao' retornar. Use vírgula para separar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "nome,imagem,id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna os dados da marca"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Marca"
+                ],
+                "summary": "Cadastrar marca",
+                "operationId": "10534f7993cbe2f5fc7813bdc6e7af63",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "imagem"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "description": "Nome da marca (único).",
+                                        "type": "string",
+                                        "minLength": 3,
+                                        "example": "Tesla"
+                                    },
+                                    "imagem": {
+                                        "description": "Arquivo de imagem (formatos permitidos: png, jpg, svg, webp).",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Marca criada com sucesso"
+                    },
+                    "422": {
+                        "description": "Erros de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/marca/{id}": {
+            "get": {
+                "tags": [
+                    "Marca"
+                ],
+                "summary": "Detalhes de uma marca",
+                "operationId": "513a38e6939b1dd5d608d8453267163e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da marca a ser pesquisado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 2
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Marca não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Marca"
+                ],
+                "summary": "Remover uma marca",
+                "operationId": "836713a3cde497bfc9b88a4b6eb855fc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da marca a ser deletada ",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 2
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Marca não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Insira o token JWT no formato: Bearer {seu_token}",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Carro",
+            "description": "Carro"
+        },
+        {
+            "name": "Cliente",
+            "description": "Cliente"
+        },
+        {
+            "name": "Locacao",
+            "description": "Locacao"
+        },
+        {
+            "name": "Marca",
+            "description": "Marca"
+        }
+    ]
+}
