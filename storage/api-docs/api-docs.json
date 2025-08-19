@@ -1158,6 +1158,203 @@
                     }
                 ]
             }
+        },
+        "/api/v1/modelo": {
+            "get": {
+                "tags": [
+                    "Modelo"
+                ],
+                "summary": "Modelo cadastrados",
+                "operationId": "2bd6f3c9b4af7a269f0ac0ece8f0b180",
+                "parameters": [
+                    {
+                        "name": "atributos_marca",
+                        "in": "query",
+                        "description": "Quais colunas do relacionamento 'marca' retornar. Use vírgula para separar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "nome,imagem"
+                    },
+                    {
+                        "name": "filtro",
+                        "in": "query",
+                        "description": "Filtros dinâmicos. Exemplos de operadores comuns: =, >, >=, <, <=, like, in, between. ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "nome:like:Fiat;numero_portas:<:4"
+                    },
+                    {
+                        "name": "atributos",
+                        "in": "query",
+                        "description": "Quais colunas do recurso 'modelo' retornar. Use vírgula para separar.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "nome,imagem,numero_portas,lugares,marca_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna os dados do modelo"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Modelo"
+                ],
+                "summary": "Cadastrar modelo",
+                "operationId": "af077ad3f881b12d5e8b56e7fb5bec9f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "imagem",
+                                    "marca_id",
+                                    "numero_portas",
+                                    "lugares",
+                                    "air_bag",
+                                    "abs"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "description": "Nome do modelo.",
+                                        "type": "string",
+                                        "minLength": 3,
+                                        "example": "Tesla"
+                                    },
+                                    "imagem": {
+                                        "description": "Arquivo de imagem (formatos permitidos: png, jpg, svg, webp).",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "marca_id": {
+                                        "description": "ID do modelo.",
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "numero_portas": {
+                                        "description": "Numero de portas do modelo",
+                                        "type": "integer",
+                                        "example": "4"
+                                    },
+                                    "lugares": {
+                                        "description": "Quantidade de lugares",
+                                        "type": "integer",
+                                        "example": "5"
+                                    },
+                                    "air_bag": {
+                                        "description": "Air_bag disponivel?",
+                                        "type": "text",
+                                        "example": "1"
+                                    },
+                                    "abs": {
+                                        "description": "abs disponivel?",
+                                        "type": "text",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Marca criada com sucesso"
+                    },
+                    "422": {
+                        "description": "Erros de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/modelo/{id}": {
+            "get": {
+                "tags": [
+                    "Modelo"
+                ],
+                "summary": "Detalhes de uma modelo",
+                "operationId": "0f5cc5472017b60f9fef668e6886ad7c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do modelo a ser pesquisado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Modelo não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Modelo"
+                ],
+                "summary": "Remover um modelo",
+                "operationId": "4247c1bf0cbdd5a66d79dd8f2d8e78a4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do modelo a ser deletado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 2
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Modelo não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -1190,6 +1387,10 @@
         {
             "name": "Marca",
             "description": "Marca"
+        },
+        {
+            "name": "Modelo",
+            "description": "Modelo"
         }
     ]
 }
